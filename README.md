@@ -110,7 +110,7 @@ npm install
 ```text
 npx expo start -c
 ```
-# Η εφαρμογή λειτουργεί μέσω QR code της εφαρμογής Expo Go.
+ Η εφαρμογή λειτουργεί μέσω QR code της εφαρμογής Expo Go.
 
 # Βασικά API endpoints 
 
