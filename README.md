@@ -43,9 +43,10 @@ CN6035-CW
 # Ρύθμιση βάσης δεδομένων - MariaDB
 # Για τη δημιουργία της βάσης και των πινάκων
 
+```text
 cd backend
 cmd /c "mysql -u root -p1234 < db\schema.sql"
-
+```
 # Για εισαγωγή δοκιμαστικών δεδομένων
 
 cmd /c "mysql -u root -p1234 < db\seed.sql"
@@ -65,15 +66,15 @@ Password: password123
 
 # Ρύθμιση Backend
 # 1-Μετάβαση στο φάκελο backend
-
+```text
 cd backend
-
+```
 # 2- Εγκατάσταση των dependencies
-
+```text
 npm install
-
+```
 # 3- Δημιουργία αρχείου .env μέσα στον φάκελο backend
-
+```text
 PORT=3000
 NODE_ENV=development
 
@@ -87,54 +88,54 @@ JWT_ACCESS_SECRET=cn6035_access_secret_change_me
 JWT_REFRESH_SECRET=cn6035_refresh_secret_change_me
 JWT_ACCESS_EXPIRES=15m
 JWT_REFRESH_EXPIRES=7d
-
+```
 # 4- Εκκίνηση Backend Server 
-
+```text
 npm start
-
+```
 # 5- Το backend τρέχει στο:
-
+```text
 http://localhost:3000
-
+```
 # Ρύθμιση Frontend
 # 1- Μετάβαση στον φάκελο frontend
-
+```text
 cd frontend
-
+```
 # 2- Εγκατάσταση των dependencies
-
+```text
 npm install
-
+```
 # 3- Εκκίνηση Expo
-
+```text
 npx expo start -c
-
+```
 # Η εφαρμογή λειτουργεί μέσω QR code της εφαρμογής Expo Go.
 
 # Βασικά API endpoints 
 
 # 1- Authentication
-
+```text
 POST /auth/register
 POST /auth/login
 POST /auth/refresh
-
+```
 # 2- Θέατρα και Παραστάσεις
-
+```text
 GET /theatres
 GET /theatres?search=...
 GET /shows
 GET /shows?theatreId=...
 GET /showtimes?showId=...
 GET /seats?showtimeId=...
-
+```
 # 3- Κρατήσεις
 # Απαιτούν JWT access token
-
+```text
 POST /reservations
 DELETE /reservations/:id
 GET /user/reservations
-
+```
 # Λειτουργίες εφαρμογής
 
 -Εγγραφή χρήστη
