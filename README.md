@@ -5,7 +5,7 @@
 Η εφαρμογή είναι ένα σύστημα κράτησης θέσεων για θεατρικές παραστάσεις μέσω κινητής συσκευής
 
 # Τεχνολογίες εφαρμογής
-
+```text
 -React Native / Expo
 -Node.js
 -Express
@@ -14,7 +14,7 @@
 -bcryptjs
 -Axios
 -Expo Secure Store
-
+```
 # Δομή
 ```text
 CN6035-CW
@@ -48,32 +48,32 @@ cd backend
 cmd /c "mysql -u root -p1234 < db\schema.sql"
 ```
 # Για εισαγωγή δοκιμαστικών δεδομένων
-
+```text
 cmd /c "mysql -u root -p1234 < db\seed.sql"
-
+```
 # Το seed.sql φτιάχνει τα εξής:
-
+```text
 -θέατρα
 -παραστάσεις
 -ώρες παραστάσεων
 -θέσεις
 -δοκιμαστικούς χρήστες
-
+```
 # Δοκιμαστικός λογαριασμός χρήστη
-
+```text
 Email: test@example.com
 Password: password123
-
+```
 # Ρύθμιση Backend
-# 1-Μετάβαση στο φάκελο backend
+## 1-Μετάβαση στο φάκελο backend
 ```text
 cd backend
 ```
-# 2- Εγκατάσταση των dependencies
+## 2- Εγκατάσταση των dependencies
 ```text
 npm install
 ```
-# 3- Δημιουργία αρχείου .env μέσα στον φάκελο backend
+## 3- Δημιουργία αρχείου .env μέσα στον φάκελο backend
 ```text
 PORT=3000
 NODE_ENV=development
@@ -89,24 +89,24 @@ JWT_REFRESH_SECRET=cn6035_refresh_secret_change_me
 JWT_ACCESS_EXPIRES=15m
 JWT_REFRESH_EXPIRES=7d
 ```
-# 4- Εκκίνηση Backend Server 
+## 4- Εκκίνηση Backend Server 
 ```text
 npm start
 ```
-# 5- Το backend τρέχει στο:
+## 5- Το backend τρέχει στο:
 ```text
 http://localhost:3000
 ```
 # Ρύθμιση Frontend
-# 1- Μετάβαση στον φάκελο frontend
+## 1- Μετάβαση στον φάκελο frontend
 ```text
 cd frontend
 ```
-# 2- Εγκατάσταση των dependencies
+## 2- Εγκατάσταση των dependencies
 ```text
 npm install
 ```
-# 3- Εκκίνηση Expo
+## 3- Εκκίνηση Expo
 ```text
 npx expo start -c
 ```
@@ -114,13 +114,13 @@ npx expo start -c
 
 # Βασικά API endpoints 
 
-# 1- Authentication
+## 1- Authentication
 ```text
 POST /auth/register
 POST /auth/login
 POST /auth/refresh
 ```
-# 2- Θέατρα και Παραστάσεις
+## 2- Θέατρα και Παραστάσεις
 ```text
 GET /theatres
 GET /theatres?search=...
@@ -129,7 +129,7 @@ GET /shows?theatreId=...
 GET /showtimes?showId=...
 GET /seats?showtimeId=...
 ```
-# 3- Κρατήσεις
+## 3- Κρατήσεις
 # Απαιτούν JWT access token
 ```text
 POST /reservations
@@ -137,7 +137,7 @@ DELETE /reservations/:id
 GET /user/reservations
 ```
 # Λειτουργίες εφαρμογής
-
+```text
 -Εγγραφή χρήστη
 -Σύνδεση χρήστη
 -JWT Authentication
@@ -150,7 +150,7 @@ GET /user/reservations
 -Κράτηση θέσης
 -Προβολή ιστορικού κρατήσεων του χρήστη
 -Ακύρωση κράτησης
-
+```
 # Συνέπεια δεδομένων 
 
 Για τη δημιουργία μιας κράτησης χρησιμοποιείται transaction στο Backend. Η ίδια θέση δε μπορεί να κρατηθεί 2 φορές, μέσω ελέγχου διαθεσιμότητας και η κράτηση συνδέεται με ένα μοναδικό seat_id.
@@ -160,7 +160,7 @@ GET /user/reservations
 Η εφαρμογή χρησιμοποιεί σκοτεινό θέμα με κόκκινες λεπτομέρειες δίνοντας την αίσθηση σκηνής θεάτρου με τις κλάσσικές κόκκινες κουρτίνες.
 
 # Εκτέλεση Demo
-
+```text
 Login
 -Προβολή θεάτρου
 -Επιλογή θεάτρου 
@@ -171,3 +171,4 @@ Login
 -Κράτηση
 -Προβολή κρατήσεων
 -Ακύρωση κράτησης
+```
