@@ -1,3 +1,4 @@
+//Οθόνη που εμφανίζει τις παραστάσεις ενός θεάτρου, με δυνατότητα αναζήτησης και ανανέωσης της λίστας.
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,

@@ -1,3 +1,4 @@
+/**Οθόνη προφίλ χρήστη με τις κρατήσεις του, μπορεί να δεί το κωδικό QR κάθε κράτησης και να ακυρώσει κράτηση παράστασης που δεν έχει ολοκληρωθεί ακόμα **/
 import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,10 +10,11 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-
+import QRCode from 'react-native-qrcode-svg';
 import ScreenBackground from '../components/ScreenBackground';
 import { reservationApi } from '../services/api';
 import { colors } from '../theme/colors';
+
 
 function formatDateTime(value) {
   return new Date(value).toLocaleString('el-GR', {
@@ -36,6 +38,13 @@ export default function ProfileScreen({ navigation }) {
   const [reservations, setReservations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [openQrId, setOpenQrId] = useState(null);
+
+  const activeReservations = reservations.filter(
+    (reservation) => !isPast(reservation.start_datetime)
+  ).length;
+
+  const pastReservations = reservations.length - activeReservations;
 
   useFocusEffect(
     useCallback(() => {
@@ -70,11 +79,17 @@ export default function ProfileScreen({ navigation }) {
 
     Alert.alert(
       'Ακύρωση κράτησης',
-      `Ακυρώστε την κράτησή σας για "${reservation.show_title}"?`,
+      `Θέλεις σίγουρα να ακυρώσεις την κράτηση για "${reservation.show_title}";`,
       [
-        { text: 'Όχι', style: 'cancel' },
         {
-          text: 'Ακύρωση',
+          text: 'Όχι, κράτησέ την',
+          style: 'cancel',
+          onPress: () => {
+            console.log('Reservation cancellation dismissed');
+          },
+        },
+        {
+          text: 'Ναι, ακύρωση κράτησης',
           style: 'destructive',
           onPress: async () => {
             try {
@@ -87,23 +102,20 @@ export default function ProfileScreen({ navigation }) {
                   onPress: () =>
                     navigation.reset({
                       index: 1,
-                      routes: [
-                        { name: 'Home' },
-                        { name: 'Profile' },
-                      ],
+                      routes: [{ name: 'Home' }, { name: 'Profile' }],
                     }),
                 },
               ]);
             } catch (error) {
-              const message = error.response?.data?.message || 'Cancellation failed.';
+              const message = error.response?.data?.message || 'Η ακύρωση απέτυχε.';
               Alert.alert('Σφάλμα', message);
             }
           },
         },
-      ]
+      ],
+      { cancelable: true }
     );
   }
-
   const sortedReservations = [...reservations].sort((a, b) => {
     const aPast = isPast(a.start_datetime);
     const bPast = isPast(b.start_datetime);
@@ -114,12 +126,22 @@ export default function ProfileScreen({ navigation }) {
 
   function renderReservation({ item }) {
     const past = isPast(item.start_datetime);
+    const qrValue = JSON.stringify({
+      reservationId: item.reservation_id,
+      showTitle: item.show_title,
+      startDatetime: item.start_datetime,
+      theatre: item.theatre_name,
+      hall: item.hall,
+      row: item.row_label,
+      seat: item.seat_number,
+      price: item.price,
+    });
 
     return (
       <View style={[styles.card, past && styles.cardPast]}>
         <View style={styles.cardHeader}>
           <Text style={styles.showTitle}>{item.show_title}</Text>
-          {past && <Text style={styles.pastBadge}>Προηγμένες</Text>}
+          {past && <Text style={styles.pastBadge}>Προηγούμενες</Text>}
         </View>
 
         <Text style={styles.theatre}>{item.theatre_name}</Text>
@@ -134,6 +156,33 @@ export default function ProfileScreen({ navigation }) {
         </Text>
 
         <Text style={styles.price}>{formatPrice(item.price)}</Text>
+
+        <Pressable
+          style={styles.qrToggleButton}
+          onPress={() =>
+            setOpenQrId((currentId) =>
+              currentId === item.reservation_id ? null : item.reservation_id
+            )
+          }
+        >
+          <Text style={styles.qrToggleText}>
+            {openQrId === item.reservation_id ? 'Απόκρυψη QR' : 'Εμφάνιση QR'}
+          </Text>
+        </Pressable>
+
+        {openQrId === item.reservation_id && (
+          <View style={styles.qrBox}>
+            <QRCode
+              value={qrValue}
+              size={145}
+              backgroundColor={colors.text}
+              color={colors.background}
+            />
+            <Text style={styles.qrHint}>
+              QR εισιτήριο για την κράτηση #{item.reservation_id}
+            </Text>
+          </View>
+        )}
 
         {!past && (
           <Pressable style={styles.cancelButton} onPress={() => confirmCancel(item)}>
@@ -153,32 +202,52 @@ export default function ProfileScreen({ navigation }) {
     );
   }
 
-  return (
-    <ScreenBackground>
-      <View style={styles.container}>
-        <Text style={styles.heading}>Οι κρατήσεις μου</Text>
-        <Text style={styles.subheading}>{reservations.length} Όλες οι κρατήσεις μου:</Text>
+return (
+  <ScreenBackground>
+    <View style={styles.container}>
+      <View style={styles.summaryRow}>
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryNumber}>{reservations.length}</Text>
+          <Text style={styles.summaryLabel}>Σύνολο</Text>
+        </View>
 
-        <FlatList
-          data={sortedReservations}
-          keyExtractor={(item) => String(item.reservation_id)}
-          renderItem={renderReservation}
-          refreshing={isRefreshing}
-          onRefresh={handleRefresh}
-          contentContainerStyle={styles.list}
-          ListEmptyComponent={
-            <View style={styles.empty}>
-              <Text style={styles.emptyTitle}>Δεν έχετε κρατήσεις ακόμη.</Text>
-              <Text style={styles.emptyText}>Επιλέξτε μια παράσταση και κρατήστε την πρώτη σας θέση.</Text>
-              <Pressable style={styles.browseButton} onPress={() => navigation.navigate('Home')}>
-                <Text style={styles.browseButtonText}>Περιήγηση θεάτρων</Text>
-              </Pressable>
-            </View>
-          }
-        />
+        <View style={styles.summaryDivider} />
+
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryNumber}>{activeReservations}</Text>
+          <Text style={styles.summaryLabel}>Ενεργές</Text>
+        </View>
+
+        <View style={styles.summaryDivider} />
+
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryNumber}>{pastReservations}</Text>
+          <Text style={styles.summaryLabel}>Παλαιές</Text>
+        </View>
       </View>
-    </ScreenBackground>
-  );
+
+      <FlatList
+        data={sortedReservations}
+        keyExtractor={(item) => String(item.reservation_id)}
+        renderItem={renderReservation}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <Text style={styles.emptyTitle}>Δεν έχετε κρατήσεις ακόμη.</Text>
+            <Text style={styles.emptyText}>
+              Επιλέξτε μια παράσταση και κρατήστε την πρώτη σας θέση.
+            </Text>
+            <Pressable style={styles.browseButton} onPress={() => navigation.navigate('Home')}>
+              <Text style={styles.browseButtonText}>Περιήγηση θεάτρων</Text>
+            </Pressable>
+          </View>
+        }
+      />
+    </View>
+  </ScreenBackground>
+);
 }
 
 const styles = StyleSheet.create({
@@ -297,4 +366,64 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontWeight: '900',
   },
+  summaryRow: {
+  flexDirection: 'row',
+  backgroundColor: colors.surface,
+  borderWidth: 1,
+  borderColor: colors.border,
+  borderRadius: 8,
+  marginTop: 15,
+  marginBottom: 40,
+  paddingVertical: 14,
+},
+
+summaryItem: {
+  flex: 1,
+  alignItems: 'center',
+},
+
+summaryNumber: {
+  color: colors.primaryLight,
+  fontSize: 24,
+  fontWeight: '900',
+},
+
+summaryLabel: {
+  color: colors.textMuted,
+  fontSize: 12,
+  fontWeight: '800',
+  marginTop: 4,
+},
+
+summaryDivider: {
+  width: 1,
+  backgroundColor: colors.border,
+},
+  qrToggleButton: {
+  marginTop: 12,
+  borderWidth: 1,
+  borderColor: colors.primary,
+  borderRadius: 8,
+  paddingVertical: 11,
+  alignItems: 'center',
+},
+qrToggleText: {
+  color: colors.primaryLight,
+  fontWeight: '900',
+},
+qrBox: {
+  marginTop: 12,
+  backgroundColor: colors.text,
+  borderRadius: 10,
+  padding: 14,
+  alignItems: 'center',
+},
+qrHint: {
+  color: colors.background,
+  fontSize: 12,
+  fontWeight: '700',
+  textAlign: 'center',
+  marginTop: 10,
+},
+  
 });

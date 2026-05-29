@@ -1,3 +1,5 @@
+// Οθόνη εγγραφής νέου χρήστη με όνομα, email και κωδικό πρόσβασης, με διαχείριση σφαλμάτων και φόρτωσης
+//ελεγχος για κενά πεδία, ασθενείς κωδικούς, εμφάνιση μηνύματος σφάλματος σε περίπτωση αποτυχίας εγγραφής, και απενεργοποίηση κουμπιού κατά τη διάρκεια της υποβολής
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -86,7 +88,7 @@ export default function RegisterScreen({ navigation }) {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            placeholder="At least 6 characters"
+            placeholder="Τουλάχιστον 6 χαρακτήρες"
             placeholderTextColor={colors.textMuted}
             style={styles.input}
           />

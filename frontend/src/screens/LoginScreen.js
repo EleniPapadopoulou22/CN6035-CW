@@ -1,3 +1,5 @@
+// Οθόνη σύνδεσης χρήστη με email και κωδικό πρόσβασης, με διαχείριση σφαλμάτων και φόρτωσης
+//ελεγχος για κενά πεδία, εμφάνιση μηνύματος σφάλματος σε περίπτωση αποτυχίας σύνδεσης, και απενεργοποίηση κουμπιού κατά τη διάρκεια της υποβολής
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -19,8 +21,8 @@ import { colors } from '../theme/colors';
 export default function LoginScreen({ navigation }) {
   const { login } = useAuth();
 
-  const [email, setEmail] = useState('test@example.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleLogin() {
