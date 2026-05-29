@@ -159,9 +159,18 @@ GET /user/reservations
 
 Η εφαρμογή χρησιμοποιεί σκοτεινό θέμα με κόκκινες λεπτομέρειες δίνοντας την αίσθηση σκηνής θεάτρου με τις κλάσσικές κόκκινες κουρτίνες.
 
-<img width="595" height="294" alt="Screenshot 2026-05-29 201618" src="https://github.com/user-attachments/assets/d8ca7e46-0103-442f-92cd-3fc07bf279c7" />
-<img width="571" height="288" alt="Screenshot 2026-05-29 201635" src="https://github.com/user-attachments/assets/1c087e81-da23-4cbc-a90e-91ceb3757f1c" />
-<img width="553" height="290" alt="Screenshot 2026-05-29 201648" src="https://github.com/user-attachments/assets/f0a31664-246c-49a0-9852-f8ea3b6ac77d" />
+<p align="center">
+  <img width="595" height="294" alt="Screenshot 2026-05-29 201618" src="https://github.com/user-attachments/assets/d8ca7e46-0103-442f-92cd-3fc07bf279c7" />
+</p>
+
+<p align="center">
+  <img width="571" height="288" alt="Screenshot 2026-05-29 201635" src="https://github.com/user-attachments/assets/1c087e81-da23-4cbc-a90e-91ceb3757f1c" />
+</p>
+
+<p align="center">
+  <img width="553" height="290" alt="Screenshot 2026-05-29 201648" src="https://github.com/user-attachments/assets/f0a31664-246c-49a0-9852-f8ea3b6ac77d" />
+</p>
+
 
 # Εκτέλεση Demo
 ```text
